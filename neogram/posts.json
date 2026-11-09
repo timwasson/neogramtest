@@ -5,10 +5,9 @@
     "siteId": "1edcef21-feab-4b47-9af2-60f23a33226e",
     "siteName": "Neogram Test Github",
     "siteSlug": "neogram-test-github",
+    "caption": "Test for Github Pages",
     "imagePath": "https://timwasson.github.io/neogramtest/neogram/uploads/images/1794183961674-lathvjk.webp",
     "thumbnailPath": "https://timwasson.github.io/neogramtest/neogram/uploads/thumbs/1794183961674-lathvjk-thumb.webp",
-    "imageUrl": "https://timwasson.github.io/neogramtest/neogram/uploads/images/1794183961674-lathvjk.webp",
-    "thumbnailUrl": "https://timwasson.github.io/neogramtest/neogram/uploads/thumbs/1794183961674-lathvjk-thumb.webp",
     "photos": [
       {
         "imagePath": "https://timwasson.github.io/neogramtest/neogram/uploads/images/1794183961674-lathvjk.webp",
@@ -19,20 +18,23 @@
         "thumbnailPath": "https://timwasson.github.io/neogramtest/neogram/uploads/thumbs/1794183962284-07i8qpn-thumb.webp"
       }
     ],
-    "caption": "Test for Github Pages",
+    "imageUrl": "https://timwasson.github.io/neogramtest/neogram/uploads/images/1794183961674-lathvjk.webp",
+    "thumbnailUrl": "https://timwasson.github.io/neogramtest/neogram/uploads/thumbs/1794183961674-lathvjk-thumb.webp",
     "filterApplied": "crt",
     "mood": null,
     "webring": null,
     "location": null,
     "likes": 0,
     "createdAt": "2026-11-09T00:26:02.755Z",
-    "author": "surfer",
     "commentsCount": 0,
     "comments": [],
     "commentsUrl": "uploads/images/1794183961674-lathvjk.comments.json",
     "actions": {
       "likeUrl": "https://neogram.club/api/posts/56f39846-feed-4ae4-8d21-aa63c7979f96/like",
       "commentUrl": "https://neogram.club/api/posts/56f39846-feed-4ae4-8d21-aa63c7979f96/comments"
-    }
+    },
+    "siteUrl": "https://timwasson.github.io/neogramtest",
+    "galleryUrl": "https://timwasson.github.io/neogramtest/neogram/",
+    "livePhotoUrl": "https://timwasson.github.io/neogramtest/neogram/photos/56f39846-feed-4ae4-8d21-aa63c7979f96/"
   }
 ]
