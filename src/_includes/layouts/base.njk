@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{ description or site.subtitle }}">
+    <meta name="author" content="{{ site.author }}">
+    <title>{{ title }} | {{ site.title }}</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22
+        font-size=%2290%22>💾</text></svg>">
+  </head>
+  <body>
+    <div class="retro-page-container">
+      <div class="retro-window" id="main-desktop-window">
+        {% include "components/header.njk" %}
+        <div class="retro-window-body">
+          {% include "components/navbar.njk" %}
+          <!-- System Status Bar -->
+          <main id="main-content">
+            {{ content | safe }}
+          </main>
+          {% include "components/badges.njk" %}
+          <span class="label">VISITORS:</span>
+          <!-- Neogram Dynamic Web Hit Counter -->
+          <!-- Paste anywhere inside your page's HTML (e.g. before </body>) -->
+          <div class="neogram-counter">
+            <img src="https://neogram.club/counter/wasson/default.svg?style=green_led" alt="Visitor Counter"/>
+          </div>
+          {% include "components/footer.njk" %}
+        </div>
+      </div>
+    </div>
+    <script src="/assets/js/retro-effects.js" defer></script>
+    <script src="/assets/js/widget-tester.js" defer></script>
+    <!-- Neogram Live Chat / Pager Widget -->
+    <script
+      src="https://neogram.club/embed/pager.js"
+      data-station="wasson"
+      data-slug="default"
+      data-position="bottom-right"
+      defer></script>
+  </body>
+</html>

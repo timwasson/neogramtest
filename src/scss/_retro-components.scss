@@ -1,0 +1,307 @@
+// Retro 90s Components
+@use 'variables' as *;
+
+.retro-page-container {
+  max-width: 860px;
+  margin: 0 auto 30px auto;
+}
+
+// Window Chrome
+.retro-window {
+  background: $win-gray;
+  @include win95-heavy-outset;
+  margin-bottom: 24px;
+}
+
+.retro-titlebar {
+  background: $titlebar-active-gradient;
+  color: #ffffff;
+  padding: 3px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  user-select: none;
+
+  .title-content {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+  }
+
+  .title-controls {
+    display: flex;
+    gap: 3px;
+
+    .win-btn {
+      width: 16px;
+      height: 14px;
+      background: $win-gray;
+      @include win95-outset(1px);
+      font-size: 9px;
+      line-height: 12px;
+      text-align: center;
+      font-family: monospace;
+      color: #000000;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+
+      &:active {
+        @include win95-inset(1px);
+      }
+    }
+  }
+}
+
+.retro-window-body {
+  padding: 16px;
+}
+
+// Retro Marquee Ticker
+.retro-marquee-container {
+  background: #000000;
+  color: $retro-yellow;
+  border: 2px inset $win-dark-gray;
+  padding: 6px 10px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  font-family: $font-mono;
+  font-weight: bold;
+  font-size: 13px;
+
+  .retro-marquee-track {
+    display: inline-block;
+    white-space: nowrap;
+    animation: marquee-scroll 25s linear infinite;
+  }
+}
+
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+// Construction Warning Strip
+.retro-construction-banner {
+  background: repeating-linear-gradient(
+    -45deg,
+    #ffcc00,
+    #ffcc00 12px,
+    #000000 12px,
+    #000000 24px
+  );
+  padding: 6px;
+  margin-bottom: 16px;
+  border: 2px outset #ffffff;
+
+  .banner-inner {
+    background: #ffffcc;
+    border: 1px solid #333333;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    text-align: center;
+    font-weight: bold;
+    color: #990000;
+    font-size: 13px;
+
+    .icon {
+      font-size: 20px;
+      animation: pulse-icon 1s infinite alternate;
+    }
+  }
+}
+
+@keyframes pulse-icon {
+  from { transform: scale(1); }
+  to { transform: scale(1.18); }
+}
+
+// Navigation Bar
+.retro-nav-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  background: #dedede;
+  padding: 6px;
+  border: 2px groove #ffffff;
+  margin-bottom: 20px;
+
+  .nav-btn {
+    flex: 1 1 auto;
+    text-align: center;
+    background: $win-gray;
+    @include win95-outset(2px);
+    padding: 6px 12px;
+    color: #000000;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+
+    &:hover {
+      background: #e0e0e0;
+      color: #000080;
+    }
+
+    &:active, &.active {
+      @include win95-inset(2px);
+      background: #b0b0b0;
+      color: #000080;
+    }
+  }
+}
+
+// Retro Status Panel
+.retro-status-panel {
+  background: #f0f0f0;
+  border: 2px inset $win-dark-gray;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  font-size: 12px;
+
+  .status-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .status-bulb {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: $retro-green;
+      box-shadow: 0 0 6px $retro-green;
+      animation: blink-bulb 1.5s infinite alternate;
+    }
+
+    .label {
+      font-weight: bold;
+      color: #333333;
+    }
+
+    .value {
+      color: #000080;
+      font-family: $font-mono;
+    }
+  }
+}
+
+@keyframes blink-bulb {
+  0% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+
+// Retro Odometer Hit Counter
+.retro-hit-counter {
+  display: inline-flex;
+  align-items: center;
+  border: 2px inset #000000;
+  background: #000000;
+  padding: 2px 4px;
+  gap: 2px;
+
+  .digit {
+    background: #111111;
+    color: $retro-green;
+    font-family: $font-mono;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 2px 5px;
+    border: 1px solid #333333;
+    text-shadow: 0 0 4px rgba(0, 255, 0, 0.7);
+  }
+}
+
+// Webring Navigator
+.retro-webring {
+  background: #e8e8e8;
+  border: 2px groove #ffffff;
+  padding: 10px 14px;
+  text-align: center;
+  margin: 20px 0;
+
+  .webring-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: #800000;
+    margin-bottom: 6px;
+  }
+
+  .webring-nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 12px;
+  }
+}
+
+// Retro Table Styles
+.retro-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  border: 2px inset $win-dark-gray;
+  margin: 12px 0;
+
+  th {
+    background: #000080;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 6px 8px;
+    text-align: left;
+    border: 1px solid #404040;
+    font-size: 12px;
+  }
+
+  td {
+    padding: 6px 8px;
+    border: 1px solid #d0d0d0;
+    font-size: 12px;
+  }
+
+  tr:nth-child(even) td {
+    background: #f7f7f7;
+  }
+}
+
+// Buttons
+.retro-btn {
+  background: $win-gray;
+  @include win95-outset(2px);
+  padding: 6px 14px;
+  font-family: $font-system;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #000000;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  &:hover {
+    background: #e4e4e4;
+  }
+
+  &:active {
+    @include win95-inset(2px);
+  }
+}

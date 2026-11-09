@@ -1,0 +1,50 @@
+// 90s Retro Color Palette & Variables
+$win-gray: #c0c0c0;
+$win-dark-gray: #808080;
+$win-light: #ffffff;
+$win-shadow: #404040;
+$win-black: #000000;
+
+$titlebar-blue: #000080;
+$titlebar-active-gradient: linear-gradient(90deg, #000080 0%, #1084d0 100%);
+$titlebar-inactive: #808080;
+
+$retro-teal: #008080;
+$retro-navy: #000033;
+$retro-yellow: #ffff00;
+$retro-cyan: #00ffff;
+$retro-magenta: #ff00ff;
+$retro-red: #ff0000;
+$retro-green: #00ff00;
+$retro-amber: #ffaa00;
+
+$link-blue: #0000ff;
+$link-visited: #800080;
+$link-active: #ff0000;
+
+$font-system: 'MS Sans Serif', Geneva, Tahoma, sans-serif;
+$font-mono: 'Courier New', Courier, monospace;
+$font-serif: 'Times New Roman', Times, serif;
+
+// 3D Borders
+@mixin win95-outset($width: 2px) {
+  border-top: $width solid $win-light;
+  border-left: $width solid $win-light;
+  border-bottom: $width solid $win-dark-gray;
+  border-right: $width solid $win-dark-gray;
+}
+
+@mixin win95-inset($width: 2px) {
+  border-top: $width solid $win-dark-gray;
+  border-left: $width solid $win-dark-gray;
+  border-bottom: $width solid $win-light;
+  border-right: $width solid $win-light;
+}
+
+@mixin win95-heavy-outset {
+  border-top: 3px solid #dfdfdf;
+  border-left: 3px solid #dfdfdf;
+  border-right: 3px solid #000000;
+  border-bottom: 3px solid #000000;
+  box-shadow: inset 1px 1px 0px #ffffff, inset -1px -1px 0px #808080;
+}

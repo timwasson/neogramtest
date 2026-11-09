@@ -1,0 +1,75 @@
+{
+  "title": "Tim's Retro Web Den '96",
+  "subtitle": "Official Widget Testing Ground for Neogram",
+  "siteUrl": "https://neogramtest.neocities.org",
+  "neogramSiteUrl": "https://neogramtest.neocities.org/neogram/",
+  "author": "Tim Wasson",
+  "handle": "wasson",
+  "email": "wasson@neogramtest.neocities.org",
+  "status": "ONLINE (Connected at 28.8 kbps)",
+  "resolution": "800x600 16-Bit High Color Recommended",
+  "currentMood": "💾 Coding 90s Web Widgets in Notepad",
+  "marqueeText": "★ WELCOME TO NEOGRAMTEST.NEOCITIES.ORG ★ YOUR 90S PLAYGROUND FOR NEOGRAM WIDGET INTEGRATION & TESTING ★ LAST SYSTEM REBOOT: OCTOBER 1996 ★ BEST VIEWED IN NETSCAPE NAVIGATOR 3.0 ★",
+  "hitCount": 1337,
+  "nav": [
+    {
+      "label": "🏠 Home",
+      "url": "/"
+    },
+    {
+      "label": "📸 Neogram Gallery",
+      "url": "/neogram/",
+      "external": true
+    },
+    {
+      "label": "👤 About Webmaster",
+      "url": "/about/"
+    }
+  ],
+  "sampleWidgets": [
+    {
+      "id": "photo-feed",
+      "name": "Neogram Latest Photo Feed",
+      "description": "Embeds the recent photo stream from your Neogram static gallery directly into any personal webpage.",
+      "type": "iframe",
+      "defaultSrc": "/neogram/",
+      "embedCode": "<iframe src=\"https://neogramtest.neocities.org/neogram/\" width=\"100%\" height=\"420\" frameborder=\"0\" style=\"border: 3px inset #808080; background: #000;\"></iframe>"
+    },
+    {
+      "id": "pager-widget",
+      "name": "Retro ICQ / AIM Chat Pager",
+      "description": "Drop-in retro chat pager widget allowing website visitors to send real-time instant messages.",
+      "type": "script",
+      "embedCode": "<div id=\"neogram-pager\" data-station=\"neogramtest\">\n  <!-- Neogram Pager Embed Slot -->\n  <script src=\"https://neogramtest.neocities.org/neogram/pager.js\" async></script>\n</div>"
+    },
+    {
+      "id": "profile-badge",
+      "name": "Webmaster Micro-Profile Badge",
+      "description": "Compact retro 120x60 profile card displaying avatar, live online status, and latest snap.",
+      "type": "custom",
+      "embedCode": "<div style=\"border:2px outset #dfdfdf;background:#c0c0c0;padding:8px;font-family:monospace;width:240px;color:#000;\">\n  <div style=\"background:#000080;color:#fff;padding:2px 4px;font-weight:bold;\">★ @wasson Profile</div>\n  <p style=\"margin:6px 0;font-size:12px;\">Status: ONLINE 🟢<br>Photos: 4 | Hits: 1,337</p>\n  <a href=\"https://neogramtest.neocities.org/neogram/\" target=\"_blank\" style=\"font-size:11px;color:#000080;\">&gt;&gt; Visit Neogram Gallery</a>\n</div>"
+    }
+  ],
+  "coolSites": [
+    {
+      "title": "Neogram Retro Publishing",
+      "url": "https://neogramtest.neocities.org/neogram/",
+      "desc": "The companion photo blog publishing system."
+    },
+    {
+      "title": "Neocities.org",
+      "url": "https://neocities.org",
+      "desc": "The modern revival of the free, creative web."
+    },
+    {
+      "title": "W3C HTML 3.2 Reference",
+      "url": "https://www.w3.org/TR/REC-html32",
+      "desc": "The golden standard of 1996-1997 web design."
+    },
+    {
+      "title": "Internet Archive Wayback Machine",
+      "url": "https://web.archive.org",
+      "desc": "Preserving memories of the early World Wide Web."
+    }
+  ]
+}

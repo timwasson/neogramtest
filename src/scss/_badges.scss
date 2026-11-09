@@ -1,0 +1,92 @@
+// 88x31 Retro Web Badges and Micro-Buttons
+@use 'variables' as *;
+
+.retro-badges-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background: #2b2b2b;
+  border: 2px inset $win-dark-gray;
+  margin: 16px 0;
+}
+
+.retro-badge-btn {
+  display: inline-flex;
+  width: 88px;
+  height: 31px;
+  border: 1px outset #ffffff;
+  background: #000000;
+  text-decoration: none;
+  overflow: hidden;
+  position: relative;
+  font-family: $font-mono;
+  font-size: 9px;
+  line-height: 1.1;
+  font-weight: bold;
+  user-select: none;
+  cursor: pointer;
+
+  &:hover {
+    border-color: #ffff00;
+  }
+
+  .badge-inner {
+    display: flex;
+    width: 100%;
+    height: 100%;
+  }
+
+  .badge-icon {
+    width: 30px;
+    background: #000080;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+  }
+
+  .badge-text {
+    flex: 1;
+    background: #c0c0c0;
+    color: #000000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1px;
+
+    &.dark {
+      background: #111111;
+      color: #00ff00;
+    }
+
+    &.blue {
+      background: #003366;
+      color: #ffffff;
+    }
+  }
+}
+
+// Retro Footer
+.retro-footer {
+  margin-top: 24px;
+  border-top: 2px groove #ffffff;
+  padding-top: 14px;
+  text-align: center;
+  font-size: 11px;
+  color: #333333;
+
+  .footer-copyright {
+    margin-bottom: 6px;
+    font-weight: bold;
+  }
+
+  .footer-meta {
+    font-family: $font-mono;
+    color: #555555;
+  }
+}

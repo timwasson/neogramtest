@@ -1,0 +1,37 @@
+{
+  "name": "neogramtest",
+  "version": "1.0.0",
+  "description": "90s retro test website for testing Neogram widgets on https://neogramtest.neocities.org",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -n \"SCSS,11TY\" -c \"magenta,cyan\" \"npm run scss:watch\" \"npm run eleventy:serve\"",
+    "scss:build": "sass src/scss/main.scss src/css/style.css --no-source-map",
+    "scss:watch": "sass src/scss/main.scss src/css/style.css --watch --no-source-map",
+    "eleventy:build": "eleventy",
+    "eleventy:serve": "eleventy --serve",
+    "build": "npm run scss:build && npm run eleventy:build",
+    "build:gh-pages": "npm run scss:build && PATH_PREFIX=/neogramtest/ eleventy",
+    "deploy": "npm run build && node scripts/deploy.js",
+    "deploy:only": "node scripts/deploy.js",
+    "deploy:check": "node scripts/verify-key.js"
+  },
+  "keywords": [
+    "neocities",
+    "retro",
+    "90s",
+    "neogram",
+    "eleventy",
+    "11ty",
+    "sass"
+  ],
+  "author": "timwasson",
+  "license": "ISC",
+  "dependencies": {
+    "@11ty/eleventy": "^3.0.0",
+    "dotenv": "^16.4.7",
+    "sass": "^1.85.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

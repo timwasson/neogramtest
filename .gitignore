@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+_site/
+src/css/style.css
+src/css/style.css.map
+
+# Environment and sensitive keys
+.env
+.env.local
+*.key
+
+# Operating System & IDE junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log

@@ -1,0 +1,55 @@
+// Main SCSS entrypoint for neogramtest
+@use 'variables' as *;
+@use 'reset';
+@use 'retro-components';
+@use 'widgets';
+@use 'badges';
+
+// Typography & Content Accents
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-serif;
+  color: #000080;
+  margin-top: 0;
+}
+
+.page-headline {
+  font-size: 24px;
+  text-align: center;
+  color: #800000;
+  text-shadow: 1px 1px 0px #ffffff;
+  margin: 10px 0 16px 0;
+  letter-spacing: 0.5px;
+}
+
+.retro-hr {
+  border: 0;
+  height: 2px;
+  background: $win-dark-gray;
+  border-bottom: 1px solid #ffffff;
+  margin: 18px 0;
+}
+
+.highlight-box {
+  background: #ffffdd;
+  border: 1px dashed #cc9900;
+  padding: 10px 14px;
+  margin: 14px 0;
+  font-size: 13px;
+}
+
+.code-snippet {
+  background: #f4f4f4;
+  border: 1px solid #d0d0d0;
+  padding: 8px 12px;
+  font-family: $font-mono;
+  font-size: 12px;
+  overflow-x: auto;
+  color: #222222;
+}
+
+.pixel-art-grid {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin: 12px 0;
+}
