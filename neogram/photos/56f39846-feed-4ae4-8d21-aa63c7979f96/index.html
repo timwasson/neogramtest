@@ -32,7 +32,7 @@
 
     <div class="neogram-site__nav">
       
-        <a href="https://timwasson.github.io/neogramtest" target="_blank" rel="noopener noreferrer" class="neogram-btn neogram-btn--sm" title="Visit wasson's Personal Website">
+        <a href="https://timwasson.github.io/neogramtest" target="_blank" rel="noopener noreferrer" class="neogram-btn neogram-btn--sm" title="Visit qa_synth's Personal Website">
           <span>🏠 Personal Website ↗</span>
         </a>
       
@@ -134,7 +134,7 @@
         <!-- Author & Caption -->
         <div class="neogram-detail__author-box">
           <div class="neogram-detail__author-meta">
-            <a href="https://neogram.club/user/@surfer" target="_blank" rel="noopener noreferrer" class="neogram-detail__author-handle hover:underline" title="View @surfer on Neogram">@surfer</a>
+            <a href="https://neogram.club/user/surfer" target="_blank" rel="noopener noreferrer" class="neogram-detail__author-handle hover:underline" title="View @surfer on Neogram">@surfer</a>
             <span class="neogram-detail__author-date">Nov 9, 2026</span>
           </div>
           <p class="neogram-detail__caption">
@@ -480,7 +480,7 @@
         var siteLinkHtml = isSafeUrl
           ? ' <a href="' + escapeHtml(String(c.siteUrl).trim()) + '" target="_blank" rel="noopener noreferrer" class="neogram-comments__site-link" title="Visit personal website">[Site ↗]</a>'
           : '';
-        var profileUrl = API_BASE + '/user/' + encodeURIComponent(c.userId || c.author || '');
+        var profileUrl = API_BASE + '/user/' + encodeURIComponent(c.uin || c.userId || c.author || '');
         var authorLinkHtml = '<a href="' + escapeHtml(profileUrl) + '" target="_blank" class="neogram-comments__author-link" title="View @' + safeAuthor + ' on Neogram">@' + safeAuthor + '</a>';
 
         item.innerHTML =
@@ -536,12 +536,13 @@
     // Check for mobile redirect auth payload in URL hash
     if (window.location.hash && window.location.hash.indexOf('neogram_pass=') !== -1) {
       try {
-        var rawPass = decodeURIComponent(window.location.hash.split('neogram_pass=')[1]);
+        var rawPass = decodeURIComponent(window.location.hash.split('neogram_pass=')[1].split('&')[0]);
         var parsed = JSON.parse(rawPass);
         if (parsed && parsed.token && parsed.handle) {
           setCyberPass(parsed);
           if (window.history && window.history.replaceState) {
-            window.history.replaceState(null, '', window.location.pathname + window.location.search);
+            var cleanHash = window.location.hash.replace(/#?neogram_pass=[^&]*&?/, '').replace(/^&/, '');
+            window.history.replaceState(null, '', window.location.pathname + window.location.search + (cleanHash ? '#' + cleanHash : ''));
           }
         }
       } catch (_e) {}
@@ -608,7 +609,7 @@
   <script src="../../embed/embed.js" async></script>
   
   <!-- Neogram Retro Pager Chat Widget -->
-  <script src="../../embed/pager.js" data-station="wasson" data-auto-init="true" async></script>
+  <script src="../../embed/pager.js" data-station="qa_synth" data-auto-init="true" async></script>
   
 </body>
 </html>

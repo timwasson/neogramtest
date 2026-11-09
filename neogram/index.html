@@ -32,7 +32,7 @@
 
     <div class="neogram-site__nav">
       
-        <a href="https://timwasson.github.io/neogramtest" target="_blank" rel="noopener noreferrer" class="neogram-btn neogram-btn--sm" title="Visit wasson's Personal Website">
+        <a href="https://timwasson.github.io/neogramtest" target="_blank" rel="noopener noreferrer" class="neogram-btn neogram-btn--sm" title="Visit qa_synth's Personal Website">
           <span>🏠 Personal Website ↗</span>
         </a>
       
@@ -63,7 +63,7 @@
 <section class="neogram-banner">
   <div class="neogram-banner__header">
     <div class="neogram-banner__title">
-      <span>[:&gt; NEOGRAM TEST GITHUB // @WASSON]</span>
+      <span>[:&gt; NEOGRAM TEST GITHUB // @QA_SYNTH]</span>
     </div>
     <div class="neogram-banner__status">
       <span>● NEOCITIES STATIC STREAM</span>
@@ -192,7 +192,7 @@
 <script>
   (function () {
     var API_BASE = 'https://neogram.club';
-    var STATION_AUTHOR = 'wasson';
+    var STATION_AUTHOR = 'qa_synth';
     var friendBtn = document.getElementById('staticFriendBtn');
     var friendText = document.getElementById('staticFriendBtnText');
     var isFriendState = false;
@@ -305,7 +305,33 @@
       }
     });
 
-    document.addEventListener('DOMContentLoaded', checkFriendStatus);
+    // Check for Smart Handoff / Mobile Cyber-Pass payload in URL hash
+    function ingestPassFromHash() {
+      if (window.location.hash && window.location.hash.indexOf('neogram_pass=') !== -1) {
+        try {
+          var rawPass = decodeURIComponent(window.location.hash.split('neogram_pass=')[1].split('&')[0]);
+          var parsed = JSON.parse(rawPass);
+          if (parsed && parsed.token && parsed.handle) {
+            localStorage.setItem('neogram_pass', JSON.stringify({
+              token: parsed.token,
+              handle: parsed.handle,
+              uin: parsed.uin || null,
+              avatar: parsed.avatar || ''
+            }));
+            if (window.history && window.history.replaceState) {
+              var cleanHash = window.location.hash.replace(/#?neogram_pass=[^&]*&?/, '').replace(/^&/, '');
+              window.history.replaceState(null, '', window.location.pathname + window.location.search + (cleanHash ? '#' + cleanHash : ''));
+            }
+          }
+        } catch (_e) {}
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      ingestPassFromHash();
+      checkFriendStatus();
+    });
+    ingestPassFromHash();
     checkFriendStatus();
   })();
 </script>
@@ -365,7 +391,7 @@
   <script src="./embed/embed.js" async></script>
   
   <!-- Neogram Retro Pager Chat Widget -->
-  <script src="./embed/pager.js" data-station="wasson" data-auto-init="true" async></script>
+  <script src="./embed/pager.js" data-station="qa_synth" data-auto-init="true" async></script>
   
 </body>
 </html>
