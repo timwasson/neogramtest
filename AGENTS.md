@@ -6,13 +6,15 @@ This file serves as the definitive reference and operating guide for AI agents w
 
 ## 1. Project Identity & Purpose
 
-- **Live URL**: [https://neogramtest.neocities.org](https://neogramtest.neocities.org)
+- **Live Neocities URL**: [https://neogramtest.neocities.org](https://neogramtest.neocities.org)
+- **Live GitHub Pages URL**: [https://timwasson.github.io/neogramtest/](https://timwasson.github.io/neogramtest/)
+- **GitHub Repository**: [https://github.com/timwasson/neogramtest](https://github.com/timwasson/neogramtest)
 - **Role**: Official root base website and dedicated widget testing laboratory for **Neogram** ([https://neogramtest.neocities.org/neogram/](https://neogramtest.neocities.org/neogram/)).
 - **Aesthetic**: Classic mid-90s personal homepage (Windows 95 / GeoCities inspired: beveled outset/inset boxes, marquee tickers, 88x31 badges, odometer hit counter, webrings, and cosmic starlight background).
 - **Core Technology**:
   - **Static Site Generator**: Eleventy (11ty) 3.x using Nunjucks (`.njk`).
   - **Styling**: Sass (`sass`) compiled to vanilla CSS.
-  - **Runtime & Deployment**: Plain HTML/CSS/JS deployed via local Node script (`scripts/deploy.js`) or GitHub Actions to Neocities.
+  - **Runtime & Deployment**: Plain HTML/CSS/JS deployed via local Node script (`scripts/deploy.js`) to Neocities, and automated GitHub Actions to both Neocities (`deploy.yml`) and GitHub Pages (`pages.yml` -> `gh-pages` branch).
 
 ---
 
@@ -97,7 +99,8 @@ All development and publishing tasks can be executed via `npm`:
 | Command | Action |
 | :--- | :--- |
 | `npm run dev` | Runs Sass watch and Eleventy dev server concurrently at `http://localhost:8080` |
-| `npm run build` | Compiles Sass to `src/css/style.css` and generates static site in `_site/` |
+| `npm run build` | Compiles Sass to `src/css/style.css` and generates static site in `_site/` (root path) |
+| `npm run build:gh-pages` | Builds static site with `/neogramtest/` path prefix for GitHub Pages |
 | `npm run deploy` | Runs full build and deploys `_site/` directly to Neocities |
 | `npm run deploy:only` | Uploads current `_site/` to Neocities without re-running build |
 | `npm run deploy:check` | Verifies Neocities API key and prints account info |
@@ -136,3 +139,21 @@ All primary site content is defined in `src/_data/site.json`. Updating this file
 - **Payload**: Standard multipart/form-data upload via native Node.js `FormData` and `fetch`.
 - **Target Site**: `neogramtest` (configured in `.env`).
 - **Safety**: Only files inside `_site/` are uploaded to their respective root paths. Files in existing server subdirectories (like `/neogram`) are untouched.
+
+---
+
+## 7. GitHub Pages & Neogram Account Integration
+
+Neogram integrates directly with GitHub via its Git Commit REST API publisher (`githubPublisher.ts`).
+
+### Target Configuration in Neogram:
+- **Deployment Provider**: GitHub Pages (`github`)
+- **Repository**: `timwasson/neogramtest` (or `neogramtest`)
+- **Branch**: `gh-pages`
+- **Deploy Path**: `neogram` (or `/` to publish to the root)
+- **Site URL**: `https://timwasson.github.io/neogramtest/`
+- **Personal Access Token (PAT)**: Requires `repo` scope (classic token) or Contents read/write permissions (fine-grained token).
+
+### Automated CI/CD Workflows:
+- `.github/workflows/pages.yml`: Automatically builds with `npm run build:gh-pages` and deploys to `gh-pages` branch on push to `main`. Uses `keep_files: true` so files published by Neogram directly into `gh-pages` (like `/neogram/`) are never overwritten.
+- `.github/workflows/deploy.yml`: Automatically builds and deploys to Neocities using `NEOCITIES_API_KEY` stored in GitHub repository secrets.

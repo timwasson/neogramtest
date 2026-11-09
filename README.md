@@ -74,22 +74,42 @@ neogramtest/
 
 ## 🚀 Deployment Options
 
-- **Local One-Command Deploy** *(Recommended)*:
+- **GitHub Pages (Automated)**:
+  Every push to the `main` branch automatically triggers `.github/workflows/pages.yml`, which compiles the site with the `/neogramtest/` path prefix and deploys it to the `gh-pages` branch with `keep_files: true` (ensuring any files pushed by Neogram remain untouched).
+- **Local One-Command Neocities Deploy**:
   ```bash
   npm run deploy
   ```
-  This builds the site and sends a multipart upload directly to the Neocities API. You don't even need a Git repository or remote push.
+  This builds the site and sends a multipart upload directly to the Neocities API.
+- **Local GitHub Pages Build**:
+  ```bash
+  npm run build:gh-pages
+  ```
 - **Dry-Run Inspection**:
   ```bash
   node scripts/deploy.js --dry-run
   ```
-- **GitHub Actions**:
-  A workflow is included at `.github/workflows/deploy.yml` that will automatically deploy on pushes to `main` if you ever connect a GitHub repository (add `NEOCITIES_API_KEY` to repository secrets).
+- **Neocities CI/CD**:
+  A workflow is included at `.github/workflows/deploy.yml` that automatically deploys to Neocities on pushes to `main` using the `NEOCITIES_API_KEY` secret.
+
+---
+
+## 📸 Connecting to Neogram
+
+To configure this repository as a static publishing target in Neogram:
+
+1. **Provider**: Choose **GitHub Pages (Git Commit REST API)**
+2. **Repository**: `timwasson/neogramtest` (or `neogramtest`)
+3. **Branch**: `gh-pages`
+4. **Deploy Path**: `neogram` (or `/` for root)
+5. **Personal Access Token (PAT)**: Provide a GitHub PAT with `repo` scope (classic) or Contents read/write permissions (fine-grained)
+6. Click **Test Connection** & **Commit & Push to GitHub Pages**
 
 ---
 
 ## 🌐 Live URLs
 
-- **Root Website**: [https://neogramtest.neocities.org](https://neogramtest.neocities.org)
-- **Widget Lab**: [https://neogramtest.neocities.org/lab/](https://neogramtest.neocities.org/lab/)
+- **GitHub Repository**: [https://github.com/timwasson/neogramtest](https://github.com/timwasson/neogramtest)
+- **GitHub Pages**: [https://timwasson.github.io/neogramtest/](https://timwasson.github.io/neogramtest/)
+- **Neocities Homepage**: [https://neogramtest.neocities.org](https://neogramtest.neocities.org)
 - **Companion Neogram Gallery**: [https://neogramtest.neocities.org/neogram/](https://neogramtest.neocities.org/neogram/)
