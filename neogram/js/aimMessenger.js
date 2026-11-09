@@ -1,0 +1,1011 @@
+/**
+ * Neogram AIM Messenger Client (v1.0)
+ * Real-time WebSockets + Ephemeral Delivery + 100% LocalStorage Retention
+ * Zero long-term server liability.
+ */
+(function (window, document) {
+  'use strict';
+
+  var AimClient = {
+    ws: null,
+    currentUser: null,
+    activeBuddy: null,
+    buddies: [],
+    activeVisitors: new Map(), // handle -> { handle, status: 'online' | 'offline', lastSeen: number, lastSnippet: string }
+    pendingSender: null,
+    reconnectTimer: null,
+    isOpen: false,
+    currentView: 'buddies', // 'buddies' | 'im'
+    typingTimer: null,
+
+    init: function (userHandle) {
+      if (!userHandle) return;
+      this.currentUser = userHandle;
+      this.bindDomElements();
+      this.connectWebSocket();
+      this.checkHashRoute();
+
+      var self = this;
+      window.addEventListener('hashchange', function () {
+        self.checkHashRoute();
+      });
+    },
+
+    checkHashRoute: function () {
+      var hash = window.location.hash || '';
+      if (hash.startsWith('#nim?user=') || hash.startsWith('#im?user=')) {
+        var target = hash.split('user=')[1];
+        if (target) {
+          target = target.split('&')[0];
+          this.openChatWith(target);
+        }
+      }
+    },
+
+    bindDomElements: function () {
+      var self = this;
+
+      this.dockBtn = document.getElementById('aimDockBtn');
+      this.windowEl = document.getElementById('aimMessengerWindow');
+      this.onlineCountBadge = document.getElementById('aimOnlineCountBadge');
+      this.buddiesListEl = document.getElementById('aimBuddiesList');
+      this.offlineBuddiesListEl = document.getElementById('aimOfflineBuddiesList');
+      this.buddiesViewEl = document.getElementById('aimBuddiesView');
+      this.imViewEl = document.getElementById('aimImView');
+      this.imTitleEl = document.getElementById('aimImTitle');
+      this.imStatusDotEl = document.getElementById('aimImStatusDot');
+      this.imAwayBannerEl = document.getElementById('aimImAwayBanner');
+      this.imTranscriptEl = document.getElementById('aimImTranscript');
+      this.imTypingEl = document.getElementById('aimImTyping');
+      this.imInputEl = document.getElementById('aimImInput');
+      this.imFormEl = document.getElementById('aimImForm');
+      this.userStatusSelect = document.getElementById('aimUserStatusSelect');
+      this.userAwayMsgInput = document.getElementById('aimUserAwayMsg');
+
+      if (this.dockBtn) {
+        this.dockBtn.addEventListener('click', function () {
+          if (self.pendingSender) {
+            var target = self.pendingSender;
+            self.pendingSender = null;
+            self.openChatWith(target);
+          } else {
+            self.toggleWindow();
+          }
+        });
+      }
+
+      var mobileAimBtn = document.getElementById('mobileTabAimBtn');
+      if (mobileAimBtn) {
+        mobileAimBtn.addEventListener('click', function (e) {
+          if (e) e.preventDefault();
+          self.toggleWindow();
+        });
+      }
+
+      var popoutBtn = document.getElementById('aimPopoutBtn');
+      if (popoutBtn) {
+        popoutBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (window.retroAudio) window.retroAudio.playClick();
+          // Pop out NIM in dedicated small standalone window
+          window.open(
+            '/extension/popup/popup.html',
+            'NeogramNIM',
+            'width=380,height=580,menubar=no,toolbar=no,location=no,status=no,resizable=yes'
+          );
+        });
+      }
+
+      var minimizeBtn = document.getElementById('aimMinimizeBtn');
+      if (minimizeBtn) {
+        minimizeBtn.addEventListener('click', function () {
+          self.closeWindow();
+        });
+      }
+
+      var closeBtn = document.getElementById('aimCloseBtn');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function () {
+          self.closeWindow();
+        });
+      }
+
+      this.bindViewportHandlers();
+
+      var backBtn = document.getElementById('aimBackToBuddiesBtn');
+      if (backBtn) {
+        backBtn.addEventListener('click', function () {
+          self.showBuddiesView();
+        });
+      }
+
+      var exportBtn = document.getElementById('aimExportLogsBtn');
+      if (exportBtn) {
+        exportBtn.addEventListener('click', function () {
+          self.exportLogs();
+        });
+      }
+
+      var clearBtn = document.getElementById('aimClearLogsBtn');
+      if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+          self.clearLogs();
+        });
+      }
+
+      if (this.imFormEl) {
+        this.imFormEl.addEventListener('submit', function (e) {
+          e.preventDefault();
+          self.sendMessage();
+        });
+      }
+
+      if (this.imInputEl) {
+        this.imInputEl.addEventListener('input', function () {
+          self.sendTypingIndicator();
+        });
+      }
+
+      if (this.userStatusSelect) {
+        this.userStatusSelect.addEventListener('change', function () {
+          self.updateMyStatus();
+        });
+      }
+
+      if (this.userAwayMsgInput) {
+        this.userAwayMsgInput.addEventListener('change', function () {
+          self.updateMyStatus();
+        });
+      }
+    },
+
+    connectWebSocket: function () {
+      var self = this;
+      var protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      var wsUrl = protocol + '//' + window.location.host + '/ws/chat';
+
+      try {
+        this.ws = new WebSocket(wsUrl);
+
+        this.ws.onopen = function () {
+          console.log('[:> AIM // WS] Connected to chat router.');
+          clearTimeout(self.reconnectTimer);
+        };
+
+        this.ws.onmessage = function (event) {
+          try {
+            var packet = JSON.parse(event.data);
+            self.handlePacket(packet);
+          } catch (e) {
+            console.warn('[:> AIM // WS PARSE ERROR]', e);
+          }
+        };
+
+        this.ws.onclose = function () {
+          console.log('[:> AIM // WS] Connection dropped. Scheduling reconnect...');
+          self.scheduleReconnect();
+        };
+
+        this.ws.onerror = function (err) {
+          console.warn('[:> AIM // WS ERROR]', err);
+        };
+      } catch (e) {
+        console.error('[:> AIM // WS INIT FAILED]', e);
+        this.scheduleReconnect();
+      }
+    },
+
+    scheduleReconnect: function () {
+      var self = this;
+      clearTimeout(this.reconnectTimer);
+      this.reconnectTimer = setTimeout(function () {
+        self.connectWebSocket();
+      }, 5000);
+    },
+
+    handlePacket: function (packet) {
+      var self = this;
+
+      switch (packet.type) {
+        case 'init_state':
+          this.buddies = packet.buddies || [];
+          if (Array.isArray(packet.activeVisitors)) {
+            var self = this;
+            packet.activeVisitors.forEach(function (v) {
+              self.activeVisitors.set(v.handle, {
+                handle: v.handle,
+                status: v.status || 'online',
+                lastSeen: v.connectedAt ? new Date(v.connectedAt).getTime() : Date.now(),
+              });
+            });
+          }
+          this.renderBuddies();
+          this.updateDockBadge();
+          break;
+
+        case 'visitor_presence':
+          if (packet.handle) {
+            var existingVisitor = this.activeVisitors.get(packet.handle) || { handle: packet.handle };
+            existingVisitor.status = packet.status;
+            existingVisitor.lastSeen = Date.now();
+            this.activeVisitors.set(packet.handle, existingVisitor);
+
+            if (this.activeBuddy && this.activeBuddy.handle === packet.handle) {
+              this.activeBuddy.isOnline = packet.status === 'online';
+              this.activeBuddy.status = packet.status;
+              this.updateImHeader();
+            }
+            this.renderBuddies();
+          }
+          break;
+
+        case 'presence_update':
+          this.handlePresenceChange(packet);
+          break;
+
+        case 'direct_message':
+          this.handleIncomingMessage(packet);
+          break;
+
+        case 'message_status':
+          this.handleMessageStatus(packet);
+          break;
+
+        case 'message_error':
+          if (this.isOpen && this.currentView === 'im') {
+            this.appendMessageToTranscript({
+              id: 'sys_err_' + Date.now(),
+              from: 'system',
+              text: '[:> TRANSMISSION NOTICE] ' + (packet.error || 'Failed to deliver message.'),
+              timestamp: new Date().toISOString(),
+              isSystem: true,
+            });
+            if (window.retroAudio && window.retroAudio.playError) {
+              window.retroAudio.playError();
+            }
+          }
+          break;
+
+        case 'typing':
+          if (this.activeBuddy && packet.from === this.activeBuddy.handle) {
+            this.showTyping(packet.from);
+          }
+          break;
+
+        case 'notification':
+          if (window.NeogramNotifications && typeof window.NeogramNotifications.handleRealtimeNotification === 'function') {
+            window.NeogramNotifications.handleRealtimeNotification(packet);
+          }
+          break;
+      }
+    },
+
+    handlePresenceChange: function (packet) {
+      var buddy = null;
+      for (var i = 0; i < this.buddies.length; i++) {
+        if (this.buddies[i].id === packet.userId || this.buddies[i].handle === packet.handle) {
+          buddy = this.buddies[i];
+          break;
+        }
+      }
+
+      if (buddy) {
+        var wasOnline = buddy.isOnline;
+        buddy.isOnline = packet.status !== 'offline';
+        buddy.status = packet.status;
+        if (packet.awayMessage !== undefined) {
+          buddy.awayMessage = packet.awayMessage;
+        }
+
+        // Sound triggers
+        if (!wasOnline && buddy.isOnline) {
+          if (window.retroAudio && window.retroAudio.playAimDoorOpen) {
+            window.retroAudio.playAimDoorOpen();
+          }
+        } else if (wasOnline && !buddy.isOnline) {
+          if (window.retroAudio && window.retroAudio.playAimDoorSlam) {
+            window.retroAudio.playAimDoorSlam();
+          }
+        }
+      } else {
+        // New buddy added to list
+        this.buddies.push({
+          id: packet.userId,
+          handle: packet.handle,
+          isOnline: packet.status !== 'offline',
+          status: packet.status,
+          awayMessage: packet.awayMessage || '',
+        });
+        if (window.retroAudio && window.retroAudio.playAimDoorOpen) {
+          window.retroAudio.playAimDoorOpen();
+        }
+      }
+
+      this.renderBuddies();
+      this.updateDockBadge();
+
+      // If chatting with this buddy right now, update their header
+      if (this.activeBuddy && this.activeBuddy.handle === packet.handle) {
+        this.activeBuddy.isOnline = packet.status !== 'offline';
+        this.activeBuddy.status = packet.status;
+        this.activeBuddy.awayMessage = packet.awayMessage || '';
+        this.updateImHeader();
+      }
+    },
+
+    handleIncomingMessage: function (packet) {
+      var fromHandle = packet.from;
+      var msgObj = {
+        id: packet.id,
+        from: fromHandle,
+        to: this.currentUser,
+        text: packet.text,
+        timestamp: packet.timestamp || new Date().toISOString(),
+        isMe: false,
+        wasQueued: !!packet.wasQueued,
+        isPager: !!packet.isPager,
+      };
+
+      // 1. Store in LocalStorage
+      this.saveMessageToLocal(fromHandle, msgObj);
+
+      // 2. Track as active visitor if anonymous or pager
+      if (packet.isAnonymous || packet.isPager || fromHandle.startsWith('guest_') || fromHandle.startsWith('surfer_') || fromHandle.startsWith('cyber_') || fromHandle.startsWith('dialup_') || fromHandle.startsWith('node_') || fromHandle.startsWith('netizen_') || fromHandle.startsWith('anon_')) {
+        this.activeVisitors.set(fromHandle, {
+          handle: fromHandle,
+          status: 'online',
+          lastSeen: Date.now(),
+          lastSnippet: packet.text,
+        });
+      }
+
+      // 3. Play classic chime
+      if (window.retroAudio && window.retroAudio.playAimMessageChime) {
+        window.retroAudio.playAimMessageChime();
+      }
+
+      // 4. If chatting with this buddy right now, append to transcript
+      if (this.isOpen && this.currentView === 'im' && this.activeBuddy && this.activeBuddy.handle === fromHandle) {
+        this.appendMessageToTranscript(msgObj);
+      } else {
+        // Alert on dock button
+        this.pendingSender = fromHandle;
+        if (this.dockBtn) {
+          this.dockBtn.classList.add('aim-dock-btn--alert');
+          this.dockBtn.innerHTML = '<span>[!] New IM from @' + fromHandle + '</span>';
+        }
+      }
+
+      // Re-render buddies so new visitor is visible immediately
+      if (this.currentView === 'buddies') {
+        this.renderBuddies();
+      }
+    },
+
+    handleMessageStatus: function (packet) {
+      // Append delivery feedback to transcript if active
+      if (this.isOpen && this.currentView === 'im' && this.activeBuddy && this.activeBuddy.handle === packet.to) {
+        if (packet.status === 'delivered') {
+          var sysMsgDelivered = {
+            id: 'sys_' + Date.now(),
+            from: 'system',
+            text: '[:> SYSTEM] Transmission delivered directly to @' + packet.to + '.',
+            timestamp: new Date().toISOString(),
+            isSystem: true,
+          };
+          this.appendMessageToTranscript(sysMsgDelivered);
+        } else if (packet.status === 'queued_offline') {
+          var sysMsg = {
+            id: 'sys_' + Date.now(),
+            from: 'system',
+            text: '[:> SYSTEM] Recipient @' + packet.to + ' is offline/away. Message held in 24h store-and-forward queue.',
+            timestamp: new Date().toISOString(),
+            isSystem: true,
+          };
+          this.appendMessageToTranscript(sysMsg);
+        }
+      }
+    },
+
+    sendMessage: function () {
+      if (!this.imInputEl || !this.activeBuddy) return;
+      var text = this.imInputEl.value.trim();
+      if (!text) return;
+
+      var msgId = 'msg_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+      var timestamp = new Date().toISOString();
+
+      var msgObj = {
+        id: msgId,
+        from: this.currentUser,
+        to: this.activeBuddy.handle,
+        text: text,
+        timestamp: timestamp,
+        isMe: true,
+      };
+
+      // 1. Save to LocalStorage
+      this.saveMessageToLocal(this.activeBuddy.handle, msgObj);
+
+      // 2. Render immediately in transcript
+      this.appendMessageToTranscript(msgObj);
+
+      // 3. Play send audio
+      if (window.retroAudio && window.retroAudio.playAimSendSound) {
+        window.retroAudio.playAimSendSound();
+      }
+
+      // 4. Transmit over WebSocket
+      if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+        this.ws.send(JSON.stringify({
+          type: 'direct_message',
+          id: msgId,
+          to: this.activeBuddy.handle,
+          text: text,
+        }));
+      }
+
+      this.imInputEl.value = '';
+    },
+
+    sendTypingIndicator: function () {
+      var self = this;
+      if (!this.activeBuddy || !this.ws || this.ws.readyState !== WebSocket.OPEN) return;
+      if (this.typingTimer) return;
+
+      this.ws.send(JSON.stringify({
+        type: 'typing',
+        to: this.activeBuddy.handle,
+      }));
+
+      this.typingTimer = setTimeout(function () {
+        self.typingTimer = null;
+      }, 3000);
+    },
+
+    showTyping: function (handle) {
+      if (!this.imTypingEl) return;
+      this.imTypingEl.textContent = '@' + handle + ' is typing...';
+      clearTimeout(this._typingClearTimer);
+      var el = this.imTypingEl;
+      this._typingClearTimer = setTimeout(function () {
+        el.textContent = '';
+      }, 3500);
+    },
+
+    updateMyStatus: function () {
+      var status = this.userStatusSelect ? this.userStatusSelect.value : 'online';
+      var awayMessage = this.userAwayMsgInput ? this.userAwayMsgInput.value.trim() : '';
+
+      if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+        this.ws.send(JSON.stringify({
+          type: 'set_status',
+          status: status,
+          awayMessage: awayMessage,
+        }));
+      }
+    },
+
+    // -------------------------------------------------------------
+    // LOCALSTORAGE REPOSITORY (ZERO SERVER STORAGE)
+    // -------------------------------------------------------------
+    getStorageKey: function (buddyHandle) {
+      return 'neogram_im_' + (buddyHandle || '').toLowerCase();
+    },
+
+    getLocalHistory: function (buddyHandle) {
+      try {
+        var raw = localStorage.getItem(this.getStorageKey(buddyHandle));
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    },
+
+    saveMessageToLocal: function (buddyHandle, msgObj) {
+      try {
+        var history = this.getLocalHistory(buddyHandle);
+        history.push(msgObj);
+        // Keep max 250 recent messages per conversation
+        if (history.length > 250) {
+          history = history.slice(history.length - 250);
+        }
+        localStorage.setItem(this.getStorageKey(buddyHandle), JSON.stringify(history));
+      } catch (e) {
+        console.warn('LocalStorage save failed:', e);
+      }
+    },
+
+    exportLogs: function () {
+      if (window.retroAudio) window.retroAudio.playClick();
+      var allLogs = {};
+      for (var i = 0; i < localStorage.length; i++) {
+        var key = localStorage.key(i);
+        if (key && key.indexOf('neogram_im_') === 0) {
+          try {
+            allLogs[key] = JSON.parse(localStorage.getItem(key));
+          } catch (e) {}
+        }
+      }
+
+      var blob = new Blob([JSON.stringify(allLogs, null, 2)], { type: 'application/json' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'neogram_aim_chat_logs_' + this.currentUser + '.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    },
+
+    clearLogs: function () {
+      if (!confirm('Clear all local chat history from your browser?')) return;
+      if (window.retroAudio) window.retroAudio.playClick();
+
+      var keysToRemove = [];
+      for (var i = 0; i < localStorage.length; i++) {
+        var key = localStorage.key(i);
+        if (key && key.indexOf('neogram_im_') === 0) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach(function (k) {
+        localStorage.removeItem(k);
+      });
+
+      if (this.currentView === 'im') {
+        this.loadConversation(this.activeBuddy);
+      }
+      alert('Local chat logs cleared.');
+    },
+
+    // -------------------------------------------------------------
+    // UI RENDERING & SWITCHING
+    // -------------------------------------------------------------
+    renderBuddies: function () {
+      var self = this;
+      var container = document.getElementById('aimBuddiesContainer') || document.querySelector('.aim-window__buddies-container');
+      if (!container) return;
+
+      var myHandle = (this.currentUser || '').toLowerCase();
+      var friendsOnline = [];
+      var friendsOffline = [];
+      var othersOnline = [];
+      var othersOffline = [];
+
+      this.buddies.forEach(function (b) {
+        if ((b.handle || '').toLowerCase() === myHandle) return; // Don't show yourself
+        if (b.isFriend) {
+          if (b.isOnline) friendsOnline.push(b);
+          else friendsOffline.push(b);
+        } else {
+          if (b.isOnline) othersOnline.push(b);
+          else othersOffline.push(b);
+        }
+      });
+
+      var makeItem = function (b) {
+        var dot = b.isOnline
+          ? (b.status === 'away' ? '<span class="status-led status-led--away"></span>' : '<span class="status-led status-led--online"></span>')
+          : '<span class="status-led status-led--offline"></span>';
+        var awayTip = b.awayMessage ? ' — "' + self.escapeHtml(b.awayMessage) + '"' : '';
+        var btnText = b.isOnline ? 'IM' : 'MSG';
+        var opacityClass = b.isOnline ? '' : ' opacity-70';
+        return '<div class="aim-window__buddy-item' + opacityClass + '" data-handle="' + self.escapeHtml(b.handle) + '">' +
+          '<div class="flex items-center gap-1.5 overflow-hidden">' +
+            dot +
+            '<span class="font-bold text-prompt">@' + self.escapeHtml(b.handle) + '</span>' +
+            '<span class="text-muted text-xs truncate">' + awayTip + '</span>' +
+          '</div>' +
+          '<button type="button" class="aim-window__btn-sm">' + btnText + '</button>' +
+        '</div>';
+      };
+
+      var html = '';
+
+      // 1. FRIENDS SECTION
+      html += '<div class="aim-window__buddy-section-title">Friends (' + friendsOnline.length + ' Online / ' + friendsOffline.length + ' Offline)</div>';
+      if (friendsOnline.length === 0 && friendsOffline.length === 0) {
+        html += '<div class="text-xs text-muted p-1 italic"><a href="/directory" class="text-mac underline font-bold">+ Add friends from Directory</a></div>';
+      } else {
+        friendsOnline.forEach(function (b) { html += makeItem(b); });
+        friendsOffline.forEach(function (b) { html += makeItem(b); });
+      }
+
+      // 2. OTHER STATIONS SECTION
+      html += '<div class="aim-window__buddy-section-title">Other Stations (' + othersOnline.length + ' Online)</div>';
+      if (othersOnline.length === 0 && othersOffline.length === 0) {
+        html += '<div class="text-xs text-muted p-1 italic">No other stations in directory.</div>';
+      } else {
+        othersOnline.forEach(function (b) { html += makeItem(b); });
+        othersOffline.forEach(function (b) { html += makeItem(b); });
+      }
+
+      // 3. PAGER TRANSMISSIONS & EXTERNAL SITE VISITORS
+      var visitorMap = new Map();
+
+      // From in-memory active visitors
+      this.activeVisitors.forEach(function (v, h) {
+        visitorMap.set(h, {
+          handle: h,
+          isOnline: v.status === 'online',
+          lastSeen: v.lastSeen || 0,
+          lastSnippet: v.lastSnippet || '',
+        });
+      });
+
+      // From LocalStorage chat archives
+      for (var k = 0; k < localStorage.length; k++) {
+        var storageKey = localStorage.key(k);
+        if (storageKey && storageKey.indexOf('neogram_im_') === 0) {
+          var h = storageKey.replace('neogram_im_', '');
+          if (h && h.toLowerCase() !== myHandle) {
+            var isRegBuddy = this.buddies.some(function (b) {
+              return (b.handle || '').toLowerCase() === h.toLowerCase();
+            });
+            if (!isRegBuddy) {
+              var hist = this.getLocalHistory(h);
+              var lastMsg = hist.length > 0 ? hist[hist.length - 1] : null;
+              var existing = visitorMap.get(h) || {
+                handle: h,
+                isOnline: false,
+                lastSeen: lastMsg ? new Date(lastMsg.timestamp || 0).getTime() : 0,
+                lastSnippet: lastMsg ? lastMsg.text : '',
+              };
+              if (lastMsg && !existing.lastSnippet) {
+                existing.lastSnippet = lastMsg.text;
+                existing.lastSeen = new Date(lastMsg.timestamp || 0).getTime();
+              }
+              visitorMap.set(h, existing);
+            }
+          }
+        }
+      }
+
+      var visitorList = Array.from(visitorMap.values()).sort(function (a, b) {
+        return (b.lastSeen || 0) - (a.lastSeen || 0);
+      });
+
+      var visitorsOnline = visitorList.filter(function (v) { return v.isOnline; });
+
+      html += '<div class="aim-window__buddy-section-title">Pager &amp; Site Visitors (' + visitorsOnline.length + ' Active / ' + visitorList.length + ' Total)</div>';
+      if (visitorList.length === 0) {
+        html += '<div class="text-xs text-muted p-1 italic">No visitor transmissions yet. Embed pager widget on your site to receive transmissions.</div>';
+      } else {
+        visitorList.forEach(function (v) {
+          var dot = v.isOnline ? '<span class="status-led status-led--online"></span>' : '<span class="status-led status-led--offline"></span>';
+          var snip = v.lastSnippet ? ' — "' + self.escapeHtml(v.lastSnippet.slice(0, 30)) + '"' : '';
+          var opacityClass = v.isOnline ? '' : ' opacity-70';
+          html += '<div class="aim-window__buddy-item' + opacityClass + '" data-handle="' + self.escapeHtml(v.handle) + '">' +
+            '<div class="flex items-center gap-1.5 overflow-hidden">' +
+              dot +
+              '<span class="font-bold text-accent">@' + self.escapeHtml(v.handle) + '</span>' +
+              '<span class="text-muted text-xs truncate">' + snip + '</span>' +
+            '</div>' +
+            '<button type="button" class="aim-window__btn-sm">REPLY</button>' +
+          '</div>';
+        });
+      }
+
+      container.innerHTML = html;
+
+      // Attach click listeners to buddy items
+      var allItems = container.querySelectorAll('.aim-window__buddy-item');
+      allItems.forEach(function (el) {
+        el.addEventListener('click', function () {
+          var handle = el.getAttribute('data-handle');
+          self.openChatWith(handle);
+        });
+      });
+    },
+
+    updateDockBadge: function () {
+      if (!this.onlineCountBadge) return;
+      var count = 0;
+      var self = this;
+      this.buddies.forEach(function (b) {
+        if (b.isOnline && b.handle !== self.currentUser) count++;
+      });
+      this.onlineCountBadge.textContent = count + ' Online';
+    },
+
+    openChatWith: function (handle) {
+      if (window.retroAudio) window.retroAudio.playClick();
+      // Ensure the chat window is opened and visible
+      this.openWindow();
+
+      var buddy = null;
+      for (var i = 0; i < this.buddies.length; i++) {
+        if (this.buddies[i].handle === handle) {
+          buddy = this.buddies[i];
+          break;
+        }
+      }
+
+      if (!buddy) {
+        var vInfo = this.activeVisitors.get(handle);
+        var isOnline = vInfo ? vInfo.status === 'online' : false;
+        buddy = {
+          handle: handle,
+          isOnline: isOnline,
+          status: isOnline ? 'online' : 'offline',
+          awayMessage: '',
+          isVisitor: true,
+        };
+      }
+
+      this.activeBuddy = buddy;
+      this.currentView = 'im';
+
+      if (this.buddiesViewEl) this.buddiesViewEl.classList.add('hidden');
+      if (this.imViewEl) this.imViewEl.classList.remove('hidden');
+
+      this.updateImHeader();
+      this.loadConversation(buddy);
+
+      if (this.imInputEl) this.imInputEl.focus();
+    },
+
+    showBuddiesView: function () {
+      if (window.retroAudio) window.retroAudio.playClick();
+      this.currentView = 'buddies';
+      this.activeBuddy = null;
+      if (this.imViewEl) this.imViewEl.classList.add('hidden');
+      if (this.buddiesViewEl) this.buddiesViewEl.classList.remove('hidden');
+    },
+
+    updateImHeader: function () {
+      if (!this.activeBuddy) return;
+      var titlePrefix = this.activeBuddy.isVisitor ? 'Pager Transmission: @' : 'Instant Message: @';
+      if (this.imTitleEl) this.imTitleEl.textContent = titlePrefix + this.activeBuddy.handle;
+      if (this.imStatusDotEl) {
+        if (this.activeBuddy.isVisitor) {
+          this.imStatusDotEl.innerHTML = this.activeBuddy.isOnline
+            ? '<span class="status-led status-led--online"></span> Pager Active'
+            : '<span class="status-led status-led--offline"></span> Session Closed (Queued)';
+        } else {
+          this.imStatusDotEl.innerHTML = this.activeBuddy.isOnline
+            ? (this.activeBuddy.status === 'away' ? '<span class="status-led status-led--away"></span> Away' : '<span class="status-led status-led--online"></span> Online')
+            : '<span class="status-led status-led--offline"></span> Offline';
+        }
+      }
+
+      if (this.imAwayBannerEl) {
+        if (!this.activeBuddy.isVisitor && this.activeBuddy.status === 'away' && this.activeBuddy.awayMessage) {
+          this.imAwayBannerEl.textContent = 'Auto-Response: "' + this.activeBuddy.awayMessage + '"';
+          this.imAwayBannerEl.classList.remove('hidden');
+        } else {
+          this.imAwayBannerEl.classList.add('hidden');
+        }
+      }
+    },
+
+    loadConversation: function (buddy) {
+      if (!this.imTranscriptEl || !buddy) return;
+      this.imTranscriptEl.innerHTML = '';
+
+      var history = this.getLocalHistory(buddy.handle);
+
+      if (history.length === 0) {
+        this.imTranscriptEl.innerHTML = '<div class="aim-window__msg-line aim-window__msg-line--sys">' +
+          '[:> NIM SYSTEM] Conversation opened with @' + buddy.handle + '. Messages are stored locally on your device.' +
+        '</div>';
+      } else {
+        var self = this;
+        history.forEach(function (msg) {
+          self.appendMessageToTranscript(msg);
+        });
+      }
+
+      this.scrollTranscriptToBottom();
+    },
+
+    appendMessageToTranscript: function (msg) {
+      if (!this.imTranscriptEl) return;
+      var line = document.createElement('div');
+
+      var timeStr = '';
+      try {
+        var d = new Date(msg.timestamp);
+        timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      } catch (e) {
+        timeStr = '';
+      }
+
+      if (msg.isSystem) {
+        line.className = 'aim-window__msg-line aim-window__msg-line--sys';
+        line.textContent = msg.text;
+      } else if (msg.isMe) {
+        line.className = 'aim-window__msg-line aim-window__msg-line--me';
+        line.innerHTML = '<span class="text-muted">[' + timeStr + ']</span> <strong>&lt;' + this.escapeHtml(msg.from) + '&gt;:</strong> ' + this.escapeHtml(msg.text);
+      } else {
+        line.className = 'aim-window__msg-line aim-window__msg-line--them';
+        var queuedBadge = msg.wasQueued ? ' <span class="aim-window__msg-line--sys">[offline delivered]</span>' : '';
+        line.innerHTML = '<span class="text-muted">[' + timeStr + ']</span> <strong>&lt;' + this.escapeHtml(msg.from) + '&gt;:</strong> ' + this.escapeHtml(msg.text) + queuedBadge;
+      }
+
+      this.imTranscriptEl.appendChild(line);
+      this.scrollTranscriptToBottom();
+    },
+
+    scrollTranscriptToBottom: function () {
+      if (this.imTranscriptEl) {
+        this.imTranscriptEl.scrollTop = this.imTranscriptEl.scrollHeight;
+      }
+    },
+
+    escapeHtml: function (str) {
+      var div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    },
+
+    _savedScrollY: 0,
+    _touchMoveHandler: null,
+    _lastToggleTime: 0,
+
+    bindViewportHandlers: function () {
+      var self = this;
+      var onViewportChange = function () {
+        if (!self.isOpen) return;
+        self.syncViewport();
+      };
+
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', onViewportChange);
+        window.visualViewport.addEventListener('scroll', function () {
+          if (!self.isOpen || window.innerWidth >= 768) return;
+          if (window.scrollY !== 0 || window.scrollX !== 0) {
+            window.scrollTo(0, 0);
+          }
+          self.syncViewport();
+        });
+      }
+
+      window.addEventListener('resize', function () {
+        if (window.innerWidth >= 768 && self.isOpen) {
+          document.body.classList.remove('mobile-chat-open');
+          self.detachTouchLock();
+          document.documentElement.style.removeProperty('--nim-viewport-height');
+          document.documentElement.style.removeProperty('--nim-viewport-top');
+        } else if (self.isOpen) {
+          self.syncViewport();
+        }
+      });
+
+      if (this.imInputEl) {
+        this.imInputEl.addEventListener('focus', function () {
+          if (window.innerWidth < 768) {
+            window.scrollTo(0, 0);
+            setTimeout(function () {
+              window.scrollTo(0, 0);
+              self.syncViewport();
+              self.scrollTranscriptToBottom();
+            }, 60);
+          }
+        });
+
+        this.imInputEl.addEventListener('blur', function () {
+          if (window.innerWidth < 768) {
+            window.scrollTo(0, 0);
+            setTimeout(function () {
+              self.syncViewport();
+            }, 60);
+          }
+        });
+      }
+    },
+
+    syncViewport: function () {
+      if (window.innerWidth >= 768) {
+        document.documentElement.style.removeProperty('--nim-viewport-height');
+        document.documentElement.style.removeProperty('--nim-viewport-top');
+        return;
+      }
+
+      var vv = window.visualViewport;
+      if (vv) {
+        var h = Math.round(vv.height);
+        var t = Math.round(vv.offsetTop);
+        document.documentElement.style.setProperty('--nim-viewport-height', h + 'px');
+        document.documentElement.style.setProperty('--nim-viewport-top', t + 'px');
+      } else {
+        var h = window.innerHeight;
+        document.documentElement.style.setProperty('--nim-viewport-height', h + 'px');
+        document.documentElement.style.setProperty('--nim-viewport-top', '0px');
+      }
+
+      // Keep transcript anchored to latest messages when keyboard animates
+      if (this.currentView === 'im') {
+        this.scrollTranscriptToBottom();
+      }
+    },
+
+    attachTouchLock: function () {
+      if (this._touchMoveHandler) return;
+      var self = this;
+      this._touchMoveHandler = function (e) {
+        if (!self.isOpen || window.innerWidth >= 768) return;
+        var transcript = self.imTranscriptEl;
+        var buddies = document.querySelector('.aim-window__buddies-container');
+        if (
+          (transcript && transcript.contains(e.target)) ||
+          (buddies && buddies.contains(e.target))
+        ) {
+          // Allow internal scrolling inside message transcript or buddies list
+          return;
+        }
+        // Everywhere else in the chat window, prevent window/background scrolling
+        if (e.cancelable) {
+          e.preventDefault();
+        }
+      };
+      document.addEventListener('touchmove', this._touchMoveHandler, { passive: false });
+    },
+
+    detachTouchLock: function () {
+      if (this._touchMoveHandler) {
+        document.removeEventListener('touchmove', this._touchMoveHandler);
+        this._touchMoveHandler = null;
+      }
+    },
+
+    toggleWindow: function () {
+      var now = Date.now();
+      if (now - this._lastToggleTime < 250) {
+        return;
+      }
+      this._lastToggleTime = now;
+      if (window.retroAudio) window.retroAudio.playClick();
+      if (this.isOpen) {
+        this.closeWindow();
+      } else {
+        this.openWindow();
+      }
+    },
+
+    openWindow: function () {
+      this.isOpen = true;
+      if (this.windowEl) this.windowEl.classList.remove('hidden');
+      if (this.dockBtn) {
+        this.dockBtn.classList.remove('aim-dock-btn--alert');
+        this.updateDockBadge();
+      }
+      var mobBtn = document.getElementById('mobileTabAimBtn');
+      if (mobBtn) mobBtn.classList.add('is-active');
+
+      if (window.innerWidth < 768) {
+        this._savedScrollY = window.scrollY || window.pageYOffset || 0;
+        document.body.classList.add('mobile-chat-open');
+        window.scrollTo(0, 0);
+        this.syncViewport();
+        this.attachTouchLock();
+      }
+    },
+
+    closeWindow: function () {
+      this.isOpen = false;
+      if (this.windowEl) this.windowEl.classList.add('hidden');
+      var mobBtn = document.getElementById('mobileTabAimBtn');
+      if (mobBtn) mobBtn.classList.remove('is-active');
+
+      document.body.classList.remove('mobile-chat-open');
+      document.documentElement.style.removeProperty('--nim-viewport-height');
+      document.documentElement.style.removeProperty('--nim-viewport-top');
+      this.detachTouchLock();
+
+      if (this._savedScrollY) {
+        window.scrollTo(0, this._savedScrollY);
+        this._savedScrollY = 0;
+      }
+    },
+
+    open: function () {
+      this.openWindow();
+    },
+  };
+
+  window.AimClient = AimClient;
+  window.aimMessenger = AimClient;
+})(window, document);

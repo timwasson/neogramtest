@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Static Photo Stream - 90s Retro Static Gallery</title>
+  <meta name="description" content="Personal 90s retro static photo stream published via Neogram">
+  
+  <!-- Retro Favicon & Touch Icons -->
+  <link rel="icon" type="image/x-icon" href="/neogram/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/neogram/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/neogram/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/neogram/apple-touch-icon.png">
+
+  <!-- Neogram Retro Framework (Pure Sass, Zero Tailwind) -->
+  <link rel="stylesheet" href="/neogram/css/neogram.css">
+  <link rel="stylesheet" href="/neogram/embed/neogram-embed.css">
+  
+</head>
+<body class="neogram-site">
+
+  <!-- ==============================================================
+       TOP RETRO SYSTEM BAR (Mac System 7 / Win95 Styled)
+       ============================================================== -->
+  <header class="neogram-site__taskbar">
+    <div class="neogram-site__branding">
+      <span class="neogram-site__logo">[:&gt;]</span>
+      <span class="neogram-site__title">NEOGRAM STATIC ARCHIVE</span>
+      <span class="neogram-site__tag">[:&gt; ELEVENTY GENERATED]</span>
+    </div>
+
+    <div class="neogram-site__nav">
+      
+        <a href="https://timwasson.github.io/neogramtest" target="_blank" rel="noopener noreferrer" class="neogram-btn neogram-btn--sm" title="Visit wasson's Personal Website">
+          <span>🏠 Personal Website ↗</span>
+        </a>
+      
+      <a href="/neogram/" class="neogram-btn neogram-btn--sm">
+        <span>Gallery Grid</span>
+      </a>
+      <a href="/neogram/friends/" class="neogram-btn neogram-btn--sm">
+        <span>Friends Grid</span>
+      </a>
+      <a href="https://neogram.club" target="_blank" rel="noopener noreferrer" class="neogram-btn neogram-btn--yellow neogram-btn--sm">
+        <span>Neogram Studio</span>
+      </a>
+      <button type="button" id="themeToggleBtn" class="neogram-btn neogram-btn--sm" title="Toggle Theme Skin">
+        <span>Theme</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ==============================================================
+       PAGE CONTENT CONTAINER
+       ============================================================== -->
+  <main class="neogram-site__main">
+    
+<!-- ==============================================================
+     STATIC GALLERY BANNER (Retro 90s Geocities/Cyber Homage)
+     ============================================================== -->
+<section class="neogram-banner">
+  <div class="neogram-banner__header">
+    <div class="neogram-banner__title">
+      <span>[:&gt; NEOGRAM TEST GITHUB // @WASSON]</span>
+    </div>
+    <div class="neogram-banner__status">
+      <span>● NEOCITIES STATIC STREAM</span>
+    </div>
+  </div>
+
+  <div class="neogram-banner__body">
+    <div class="neogram-banner__info">
+      <p class="neogram-banner__desc">Personal 90s retro static photo stream published via Neogram</p>
+      <p class="neogram-banner__node">
+        Broadcast node: <a href="https://timwasson.github.io/neogramtest/neogram" target="_blank" rel="noopener noreferrer"><code>https://timwasson.github.io/neogramtest/neogram ↗</code></a> · Formatted for Netscape &amp; Modern Browsers
+      </p>
+    </div>
+
+    <div class="neogram-banner__actions">
+      <span class="neogram-badge neogram-badge--cyan">1 PHOTOS ARCHIVED</span>
+      <a href="https://neogram.club" target="_blank" class="neogram-btn neogram-btn--yellow neogram-btn--sm">
+        <span>Upload New Photo :&gt;</span>
+      </a>
+      <button
+        type="button"
+        id="staticFriendBtn"
+        onclick="handleStaticFriendToggle()"
+        class="neogram-btn neogram-btn--green neogram-btn--sm"
+        style="display: none;"
+      >
+        <span id="staticFriendBtnText">+ Add Friend</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ==============================================================
+     STATIC PHOTO GRID
+     ============================================================== -->
+
+  <div class="neogram-grid">
+    
+      <article class="neogram-card">
+        <!-- Card Window Header -->
+        <div class="neogram-card__header">
+          <span class="neogram-card__author">@surfer</span>
+          <span class="neogram-card__shader">crt</span>
+        </div>
+
+        <!-- Thumbnail Viewport with CRT & Filter Shaders -->
+        
+          <div class="neogram-slider neogram-slider--card">
+            <div class="neogram-slider__track" tabindex="0" role="region" aria-label="Photo carousel slider">
+              
+                <a href="/neogram/photos/56f39846-feed-4ae4-8d21-aa63c7979f96/" class="neogram-slider__slide" id="card-56f39846-feed-4ae4-8d21-aa63c7979f96-1">
+                  <img
+                    src="https://timwasson.github.io/neogramtest/neogram/uploads/thumbs/1794183961674-lathvjk-thumb.webp"
+                    alt="Test for Github Pages (1/2)"
+                    class="neogram-slider__image filter-crt"
+                    loading="lazy"
+                    onerror="this.classList.add('neogram-img--broken'); if(this.parentElement) this.parentElement.classList.add('has-broken-image');"
+                  />
+                </a>
+              
+                <a href="/neogram/photos/56f39846-feed-4ae4-8d21-aa63c7979f96/" class="neogram-slider__slide" id="card-56f39846-feed-4ae4-8d21-aa63c7979f96-2">
+                  <img
+                    src="https://timwasson.github.io/neogramtest/neogram/uploads/thumbs/1794183962284-07i8qpn-thumb.webp"
+                    alt="Test for Github Pages (2/2)"
+                    class="neogram-slider__image filter-crt"
+                    loading="lazy"
+                    onerror="this.classList.add('neogram-img--broken'); if(this.parentElement) this.parentElement.classList.add('has-broken-image');"
+                  />
+                </a>
+              
+            </div>
+            <div class="neogram-slider__nav" aria-label="Slide navigation dots">
+              
+                <a href="#card-56f39846-feed-4ae4-8d21-aa63c7979f96-1" class="neogram-slider__dot" aria-label="Slide 1 of 2"></a>
+              
+                <a href="#card-56f39846-feed-4ae4-8d21-aa63c7979f96-2" class="neogram-slider__dot" aria-label="Slide 2 of 2"></a>
+              
+            </div>
+            <div class="neogram-slider__counter">
+              <span class="neogram-badge neogram-badge--cyan">⧉ 2</span>
+            </div>
+            <div class="neogram-card__overlay">
+              <a href="/neogram/photos/56f39846-feed-4ae4-8d21-aa63c7979f96/" class="neogram-btn neogram-btn--yellow neogram-btn--sm neogram-card__overlay-btn">
+                <span>VIEW &amp; COMMENT</span>
+              </a>
+            </div>
+          </div>
+        
+
+        <!-- Metadata & Caption Card Body -->
+        <div class="neogram-card__body">
+          <div class="neogram-card__content">
+            <div class="neogram-card__meta">
+              <span class="neogram-card__location">Earth // Cyberspace</span>
+              <span class="neogram-card__date">Nov 9, 2026</span>
+            </div>
+
+            <p class="neogram-card__caption">
+              Test for Github Pages
+            </p>
+          </div>
+
+          <!-- Tags & Actions Footer -->
+          <div>
+            <div class="neogram-card__tags">
+              
+              
+            </div>
+
+            <div class="neogram-card__footer">
+              <span class="neogram-card__likes">
+                <strong>0</strong> likes
+              </span>
+              <a href="/neogram/photos/56f39846-feed-4ae4-8d21-aa63c7979f96/" class="neogram-btn neogram-btn--yellow neogram-btn--sm">
+                <span>View Details :&gt;</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+    
+  </div>
+
+
+<!-- Friend / Follow Static Bridge Script -->
+<script>
+  (function () {
+    var API_BASE = 'https://neogram.club';
+    var STATION_AUTHOR = 'wasson';
+    var friendBtn = document.getElementById('staticFriendBtn');
+    var friendText = document.getElementById('staticFriendBtnText');
+    var isFriendState = false;
+
+    function getPass() {
+      try {
+        var raw = localStorage.getItem('neogram_pass');
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    async function checkFriendStatus() {
+      var pass = getPass();
+      if (!pass || !pass.handle) {
+        // Show "Add Friend" for logged out visitors (will open Cyber-Pass modal)
+        if (friendBtn) {
+          friendBtn.style.display = 'inline-flex';
+          friendText.textContent = '+ Add Friend';
+        }
+        return;
+      }
+
+      // If own station, do not show Add Friend
+      if (pass.handle.toLowerCase() === STATION_AUTHOR.toLowerCase()) {
+        if (friendBtn) friendBtn.style.display = 'none';
+        return;
+      }
+
+      if (friendBtn) friendBtn.style.display = 'inline-flex';
+
+      try {
+        var headers = {};
+        if (pass.token) headers['Authorization'] = 'Bearer ' + pass.token;
+        var res = await fetch(API_BASE + '/api/users/' + encodeURIComponent(STATION_AUTHOR) + '/friend-status', {
+          headers: headers,
+          credentials: 'omit'
+        });
+        var data = await res.json();
+        if (data.ok) {
+          isFriendState = !!data.isFriend;
+          updateButtonUI();
+        }
+      } catch (err) {
+        console.warn('[:> FRIEND STATUS CHECK]', err);
+      }
+    }
+
+    function updateButtonUI() {
+      if (!friendBtn || !friendText) return;
+      if (isFriendState) {
+        friendBtn.classList.remove('neogram-btn--green');
+        friendBtn.classList.add('neogram-btn--yellow');
+        friendText.textContent = '✓ Friends (Unfriend)';
+      } else {
+        friendBtn.classList.remove('neogram-btn--yellow');
+        friendBtn.classList.add('neogram-btn--green');
+        friendText.textContent = '+ Add Friend';
+      }
+    }
+
+    window.handleStaticFriendToggle = async function () {
+      if (window.retroAudio) window.retroAudio.playClick();
+      var pass = getPass();
+      if (!pass || !pass.token) {
+        // Pop up Cyber-Pass login modal
+        var origin = encodeURIComponent(window.location.origin);
+        var popupUrl = API_BASE + '/auth/connect?origin=' + origin;
+        window.open(popupUrl, 'neogram_auth', 'width=440,height=480,menubar=no,toolbar=no,location=no');
+        return;
+      }
+
+      var method = isFriendState ? 'DELETE' : 'POST';
+      try {
+        var res = await fetch(API_BASE + '/api/users/' + encodeURIComponent(STATION_AUTHOR) + '/follow', {
+          method: method,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + pass.token
+          }
+        });
+        var data = await res.json();
+        if (data.ok) {
+          if (window.retroAudio) window.retroAudio.playSuccess();
+          isFriendState = !isFriendState;
+          updateButtonUI();
+        } else {
+          alert('[:> FRIEND FAULT] ' + (data.error || 'Could not update friend status'));
+        }
+      } catch (e) {
+        alert('[:> NETWORK ERROR] ' + e.message);
+      }
+    };
+
+    // Listen for Cyber-Pass handshake if opened in popup
+    function isTrustedPassOrigin(o){return o===window.location.origin||o==='https://neogram.club'||/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(o);}
+    window.addEventListener('message', function (e) {
+      if (!isTrustedPassOrigin(e.origin)) return;
+      if (e.data && (e.data.type === 'NEOGRAM_CYBER_PASS' || e.data.type === 'NEOGRAM_EXTENSION_PASS')) {
+        try {
+          localStorage.setItem('neogram_pass', JSON.stringify({
+            token: e.data.token,
+            handle: e.data.handle,
+            uin: e.data.uin,
+            avatar: e.data.avatar || ''
+          }));
+        } catch (_e) {}
+        checkFriendStatus();
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', checkFriendStatus);
+    checkFriendStatus();
+  })();
+</script>
+
+  </main>
+
+  <!-- ==============================================================
+       STATIC SITE RETRO FOOTER
+       ============================================================== -->
+  <footer class="neogram-site__footer">
+    <div class="neogram-site__footer-inner">
+      <div class="neogram-site__footer-info">
+        <div class="neogram-site__footer-host">STATIC HOST: <a href="https://timwasson.github.io/neogramtest/neogram" target="_blank" rel="noopener noreferrer" class="neogram-site__footer-url underline">https://timwasson.github.io/neogramtest/neogram ↗</a></div>
+        
+          <div class="neogram-site__footer-host">PERSONAL WEBSITE: <a href="https://timwasson.github.io/neogramtest" target="_blank" rel="noopener noreferrer" class="neogram-site__footer-url underline">https://timwasson.github.io/neogramtest ↗</a></div>
+        
+        <div class="neogram-site__footer-sub">Built with 11ty (Eleventy) &amp; Neogram Sharp Publishing Pipeline</div>
+      </div>
+
+      <!-- Retro 88x31 Badges -->
+      <div class="neogram-site__footer-badges">
+        <span class="neogram-badge neogram-badge--cyan">11TY STATIC</span>
+        <span class="neogram-badge neogram-badge--green">NEOCITIES READY</span>
+        <span class="neogram-badge neogram-badge--magenta">800x600 BEST</span>
+        <span class="neogram-badge neogram-badge--amber">NETSCAPE 4.0</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Retro Audio Engine -->
+  <script src="/neogram/js/retroAudio.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Audio click handler for retro buttons
+      if (window.retroAudio) {
+        document.querySelectorAll('.neogram-btn, .pixel-btn, .filter-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            window.retroAudio.playClick();
+          });
+        });
+      }
+
+      // Theme toggle support
+      var toggleBtn = document.getElementById('themeToggleBtn');
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', function () {
+          var isDark = document.body.classList.toggle('dark');
+          var icon = toggleBtn.querySelector('span');
+          if (icon) icon.textContent = isDark ? 'Theme: Dark' : 'Theme: Light';
+          if (window.retroAudio) window.retroAudio.playClick();
+        });
+      }
+    });
+  </script>
+
+  <!-- Optional Neogram Embed Layer -->
+  <script src="/neogram/embed/embed.js" async></script>
+  
+  <!-- Neogram Retro Pager Chat Widget -->
+  <script src="/neogram/embed/pager.js" data-station="wasson" data-auto-init="true" async></script>
+  
+</body>
+</html>

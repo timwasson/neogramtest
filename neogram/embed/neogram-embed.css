@@ -1,0 +1,379 @@
+/**
+ * Neogram Embed Stylesheet (v2.0)
+ * Strict BEM hooks for customizable embeds on Neocities, GitHub Pages, and self-hosted static sites.
+ */
+
+:root {
+  --neogram-font-mono: 'Space Mono', 'Courier New', monospace;
+  --neogram-font-pixel: 'Silkscreen', monospace;
+  --neogram-bg-window: #dcd8d0;
+  --neogram-border-black: #000000;
+  --neogram-accent-blue: #000080;
+  --neogram-accent-green: #39ff14;
+}
+
+/* Feed Wrapper */
+.neogram-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+  font-family: var(--neogram-font-mono);
+}
+
+/* Individual Post Card */
+.neogram-post {
+  background: var(--neogram-bg-window);
+  border: 4px solid var(--neogram-border-black);
+  box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 0.9);
+  padding: 12px;
+  color: #000000;
+}
+
+.neogram-post__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  border-bottom: 2px solid var(--neogram-border-black);
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.neogram-post__avatar {
+  font-size: 16px;
+}
+
+.neogram-post__handle {
+  color: var(--neogram-accent-blue);
+}
+
+.neogram-post__media {
+  border: 2px solid var(--neogram-border-black);
+  background: #000000;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.neogram-post__media img {
+  width: 100%;
+  height: auto;
+  display: block;
+  image-rendering: pixelated;
+}
+
+.neogram-post__caption {
+  font-size: 12px;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.neogram-post__tags {
+  font-size: 10px;
+  color: #555555;
+  display: flex;
+  gap: 6px;
+}
+
+.neogram-post__actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  border-top: 2px solid var(--neogram-border-black);
+  padding-top: 6px;
+}
+
+/* Push Button */
+.neogram-button {
+  background: #dcd8d0;
+  border: 2px solid #000000;
+  font-family: var(--neogram-font-mono);
+  font-weight: bold;
+  font-size: 11px;
+  padding: 4px 8px;
+  box-shadow: 2px 2px 0px 0px #000000;
+  cursor: pointer;
+}
+
+.neogram-button:active {
+  box-shadow: 0px 0px 0px 0px #000000;
+  transform: translate(2px, 2px);
+}
+
+/* Counter Widget */
+.neogram-counter {
+  display: inline-block;
+  background: #000000;
+  border: 3px solid #808080;
+  padding: 4px 10px;
+  font-family: 'VT323', monospace;
+  font-size: 24px;
+  letter-spacing: 2px;
+}
+
+.neogram-counter--green_led {
+  color: var(--neogram-accent-green);
+  text-shadow: 0 0 6px rgba(57, 255, 20, 0.7);
+}
+
+.neogram-counter--red_nixie {
+  color: #ff3300;
+  text-shadow: 0 0 6px rgba(255, 51, 0, 0.7);
+}
+
+/* Guestbook Widget */
+.neogram-guestbook {
+  background: var(--neogram-bg-window);
+  border: 4px solid var(--neogram-border-black);
+  padding: 16px;
+  font-family: var(--neogram-font-mono);
+}
+
+.neogram-guestbook__header {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 12px;
+  border-bottom: 2px solid #000000;
+  padding-bottom: 6px;
+}
+
+/* Retro Pager & Chat Widget */
+.pager-led {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid #000000;
+}
+.pager-led--online {
+  background-color: #39ff14;
+  box-shadow: 0 0 6px #39ff14;
+}
+.pager-led--away {
+  background-color: #ffb000;
+  box-shadow: 0 0 6px #ffb000;
+}
+.pager-led--offline {
+  background-color: #888888;
+}
+
+.neogram-pager-dock {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999999;
+  font-family: var(--neogram-font-mono, monospace);
+}
+.neogram-pager-dock--bottom-left {
+  right: auto;
+  left: 20px;
+}
+.neogram-pager-dock__btn {
+  background: var(--neogram-bg-window, #dcd8d0);
+  border: 3px solid #000000;
+  box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #000000;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+}
+.neogram-pager-dock__btn:hover {
+  background: #ece8e0;
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0px 0px rgba(0, 0, 0, 1);
+}
+.neogram-pager-dock__btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 1);
+}
+.neogram-pager-dock__btn--alert {
+  background: #ffff00;
+  animation: pagerPulse 1s infinite;
+}
+
+.neogram-pager-window {
+  font-family: var(--neogram-font-mono, monospace);
+  background: var(--neogram-bg-window, #dcd8d0);
+  border: 3px solid #000000;
+  box-shadow: 5px 5px 0px 0px rgba(0, 0, 0, 0.9);
+  color: #000000;
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  position: fixed;
+  bottom: 68px;
+  right: 20px;
+  z-index: 1000000;
+  display: flex;
+  flex-direction: column;
+}
+.neogram-pager-window--bottom-left {
+  right: auto;
+  left: 20px;
+}
+.neogram-pager-window--hidden {
+  display: none !important;
+}
+.neogram-pager-window__header {
+  background: var(--neogram-accent-blue, #000080);
+  color: #ffffff;
+  padding: 6px 8px;
+  font-size: 11px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+  border-bottom: 2px solid #000000;
+}
+.neogram-pager-window__controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.neogram-pager-window__control-btn {
+  background: #c0c0c0;
+  color: #000000;
+  border: 1px solid #ffffff;
+  border-right-color: #000000;
+  border-bottom-color: #000000;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  line-height: 1;
+}
+.neogram-pager-window__meta {
+  padding: 6px 10px;
+  background: #eae6df;
+  border-bottom: 2px solid #000000;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.neogram-pager-window__status-msg {
+  color: #666666;
+  font-size: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 180px;
+}
+.neogram-pager-window__transcript {
+  background: #ffffff;
+  padding: 10px;
+  height: 200px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-bottom: 2px solid #000000;
+  font-size: 11px;
+  line-height: 1.4;
+}
+.neogram-pager-window__msg {
+  padding: 6px 8px;
+  border: 1px solid #000000;
+  background: #f4f0ea;
+}
+.neogram-pager-window__msg--me {
+  background: #e6f0fa;
+  border-color: #000080;
+}
+.neogram-pager-window__msg--system {
+  background: #fff8e0;
+  border-color: #ffb000;
+  font-style: italic;
+}
+.neogram-pager-window__msg-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  margin-bottom: 3px;
+  color: #555555;
+}
+.neogram-pager-window__msg-author {
+  font-weight: bold;
+  color: #000080;
+}
+.neogram-pager-window__msg-author--me {
+  color: #006600;
+}
+.neogram-pager-window__auth-bar {
+  padding: 6px 10px;
+  background: #dfdbd3;
+  border-bottom: 1px solid #000000;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.neogram-pager-window__form {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--neogram-bg-window, #dcd8d0);
+}
+.neogram-pager-window__input {
+  width: 100%;
+  padding: 6px 8px;
+  border: 2px solid #000000;
+  font-family: var(--neogram-font-mono, monospace);
+  font-size: 11px;
+  resize: none;
+  box-sizing: border-box;
+}
+.neogram-pager-window__input:focus {
+  outline: 2px solid #000080;
+}
+.neogram-pager-window__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+.neogram-pager-window__char-count {
+  font-size: 9px;
+  color: #666666;
+}
+.neogram-pager-window__send-btn {
+  background: #39ff14;
+  border: 2px solid #000000;
+  box-shadow: 2px 2px 0px 0px #000000;
+  font-family: var(--neogram-font-mono, monospace);
+  font-weight: bold;
+  font-size: 11px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+.neogram-pager-window__send-btn:hover {
+  background: #4aff29;
+}
+.neogram-pager-window__send-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px 0px #000000;
+}
+.neogram-pager-window__send-btn:disabled {
+  background: #888888;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+@keyframes pagerPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
