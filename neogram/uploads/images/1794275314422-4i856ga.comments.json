@@ -1,6 +1,17 @@
 {
   "version": "neogram-comments-v1",
   "postId": "2cb5e040-8fb8-4d9d-b89d-5966458157a8",
-  "updatedAt": "2026-11-10T01:48:43.026Z",
-  "comments": []
+  "updatedAt": "2026-11-10T01:48:49.712Z",
+  "comments": [
+    {
+      "id": "c_mwa17d0v_dt193",
+      "userId": "422b042f-8b51-486c-97d4-9f821bfe97d0",
+      "author": "qa_surfer",
+      "uin": 100111,
+      "avatar": "/uploads/avatars/422b042f-8b51-486c-97d4-9f821bfe97d0-1794275310935.webp",
+      "text": "Awesome frames! The WebRing is alive and glowing. — @qa_surfer",
+      "timestamp": "2026-11-10T01:48:49.712Z",
+      "siteUrl": "https://neogram.club"
+    }
+  ]
 }
