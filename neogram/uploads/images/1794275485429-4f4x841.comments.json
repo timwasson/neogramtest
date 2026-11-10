@@ -1,6 +1,17 @@
 {
   "version": "neogram-comments-v1",
   "postId": "59c09a3f-8a84-4ee8-a4f4-e731ef7efe7e",
-  "updatedAt": "2026-11-10T01:51:36.651Z",
-  "comments": []
+  "updatedAt": "2026-11-10T01:51:44.283Z",
+  "comments": [
+    {
+      "id": "c_mwa1b3q3_00dhx",
+      "userId": "8e3cb54e-f44d-45fb-bd7a-d16387dbbb97",
+      "author": "qa_friend",
+      "uin": 100110,
+      "avatar": "https://qa-neogram--1.neocities.org/neogram/avatar.webp?v=1794275480722",
+      "text": "Pure 90s nostalgia! Keep posting from cyberspace! — @qa_friend",
+      "timestamp": "2026-11-10T01:51:44.283Z",
+      "siteUrl": "https://qa-neogram--1.neocities.org"
+    }
+  ]
 }
