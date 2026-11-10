@@ -23,10 +23,21 @@
     "mood": "Radical",
     "webring": "CyberRing",
     "location": null,
-    "likes": 0,
+    "likes": 1,
     "createdAt": "2026-11-10T02:19:47.957Z",
-    "commentsCount": 0,
-    "comments": [],
+    "commentsCount": 1,
+    "comments": [
+      {
+        "id": "c_mwa2bit5_v22f7",
+        "userId": "c87e744e-0169-4740-b442-95c592c5c512",
+        "author": "qa_alice",
+        "uin": 100107,
+        "avatar": "https://chemicalmachine.neocities.org/neogram/avatar.webp?v=1794277172033",
+        "text": "Loving this gallery aesthetic—straight out of 1998! — @qa_alice",
+        "timestamp": "2026-11-10T02:20:03.449Z",
+        "siteUrl": "https://chemicalmachine.neocities.org"
+      }
+    ],
     "commentsUrl": "uploads/images/1794277181254-qklk61f.comments.json",
     "actions": {
       "likeUrl": "https://neogram.club/api/posts/ad902b51-6d34-47f1-8ab5-e8c9cc3108d7/like",
