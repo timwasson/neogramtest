@@ -19,10 +19,21 @@
     "mood": "Chill",
     "webring": "PixelArt",
     "location": null,
-    "likes": 0,
+    "likes": 1,
     "createdAt": "2026-11-10T02:22:12.325Z",
-    "commentsCount": 0,
-    "comments": [],
+    "commentsCount": 1,
+    "comments": [
+      {
+        "id": "c_mwa2ekmh_0jyng",
+        "userId": "ea3044d5-8e9c-4760-8bd8-8354814b73be",
+        "author": "qa_matrix",
+        "uin": 100121,
+        "avatar": "/uploads/avatars/ea3044d5-8e9c-4760-8bd8-8354814b73be-1794277326360.webp",
+        "text": "Bookmarked your station in my Netscape communicator! — @qa_matrix",
+        "timestamp": "2026-11-10T02:22:25.769Z",
+        "siteUrl": "https://neogram.club"
+      }
+    ],
     "commentsUrl": "uploads/images/1794277331658-9g7kx7j.comments.json",
     "actions": {
       "likeUrl": "https://neogram.club/api/posts/d2f0cd7f-f53a-4255-96af-8a40b2fa7aa2/like",
