@@ -1,6 +1,6 @@
 {
   "version": "neogram-api-v1",
-  "generatedAt": "2026-11-10T02:13:20.812Z",
+  "generatedAt": "2026-11-10T02:13:27.762Z",
   "user": {
     "id": "677faa3d-29da-4db7-8632-ef78db5165e5",
     "uin": 100122,
@@ -36,10 +36,21 @@
       "mood": "Chill",
       "webring": "PixelArt",
       "location": null,
-      "likes": 0,
+      "likes": 1,
       "createdAt": "2026-11-10T02:13:20.409Z",
-      "commentsCount": 0,
-      "comments": [],
+      "commentsCount": 1,
+      "comments": [
+        {
+          "id": "c_mwa22z9s_yxf5t",
+          "userId": "ea3044d5-8e9c-4760-8bd8-8354814b73be",
+          "author": "qa_matrix",
+          "uin": 100121,
+          "avatar": "/uploads/avatars/ea3044d5-8e9c-4760-8bd8-8354814b73be-1794276791677.webp",
+          "text": "Bookmarked your station in my Netscape communicator! — @qa_matrix",
+          "timestamp": "2026-11-10T02:13:24.880Z",
+          "siteUrl": "https://neogram.club"
+        }
+      ],
       "commentsUrl": "uploads/images/1794276796813-tspayjz.comments.json",
       "actions": {
         "likeUrl": "https://neogram.club/api/posts/5b7b9b5b-a322-4b69-b2f7-87795c033339/like",
