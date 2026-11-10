@@ -1,26 +1,49 @@
 {
   "version": "neogram-api-v1",
-  "generatedAt": "2026-11-10T02:21:41.900Z",
+  "generatedAt": "2026-11-10T02:22:13.011Z",
   "user": {
     "id": "677faa3d-29da-4db7-8632-ef78db5165e5",
     "uin": 100122,
     "handle": "qa_synth",
-    "author": "qa_synth",
-    "avatarUrl": "https://timwasson.github.io/neogramtest/neogram/avatar.webp?v=1794277171439",
     "siteUrl": "https://timwasson.github.io/neogramtest",
     "deployPath": "neogram",
     "fullSiteUrl": "https://timwasson.github.io/neogramtest/neogram",
     "statusMessage": "QA FM Synth & Sound Blaster 16",
-    "customCssUrl": null
+    "avatarUrl": "https://timwasson.github.io/neogramtest/neogram/avatar.webp?v=1794277171439"
   },
-  "endpoints": {
-    "apiUrl": "https://neogram.club",
-    "followUrl": "https://neogram.club/api/users/qa_synth/follow",
-    "unfollowUrl": "https://neogram.club/api/users/qa_synth/follow",
-    "guestbookUrl": "https://neogram.club/api/guestbook/100122",
-    "counterUrl": "https://neogram.club/api/counter/qa_synth.svg",
-    "feedUrl": "https://timwasson.github.io/neogramtest/neogram/feed.json"
-  },
-  "posts": [],
-  "friends": []
+  "posts": [
+    {
+      "id": "d2f0cd7f-f53a-4255-96af-8a40b2fa7aa2",
+      "userId": "677faa3d-29da-4db7-8632-ef78db5165e5",
+      "siteId": "1edcef21-feab-4b47-9af2-60f23a33226e",
+      "author": "qa_synth",
+      "caption": "Fresh pixel snapshots from the neighborhood webring // @qa_synth [Single Snap // VGA]",
+      "imagePath": "https://timwasson.github.io/neogramtest/neogram/uploads/images/1794277331658-9g7kx7j.webp",
+      "thumbnailPath": "https://timwasson.github.io/neogramtest/neogram/uploads/thumbs/1794277331658-9g7kx7j-thumb.webp",
+      "photos": [
+        {
+          "imagePath": "https://timwasson.github.io/neogramtest/neogram/uploads/images/1794277331658-9g7kx7j.webp",
+          "thumbnailPath": "https://timwasson.github.io/neogramtest/neogram/uploads/thumbs/1794277331658-9g7kx7j-thumb.webp"
+        }
+      ],
+      "imageUrl": "https://timwasson.github.io/neogramtest/neogram/uploads/images/1794277331658-9g7kx7j.webp",
+      "thumbnailUrl": "https://timwasson.github.io/neogramtest/neogram/uploads/thumbs/1794277331658-9g7kx7j-thumb.webp",
+      "filterApplied": "vga",
+      "mood": "Chill",
+      "webring": "PixelArt",
+      "location": null,
+      "likes": 0,
+      "createdAt": "2026-11-10T02:22:12.325Z",
+      "commentsCount": 0,
+      "comments": [],
+      "commentsUrl": "uploads/images/1794277331658-9g7kx7j.comments.json",
+      "actions": {
+        "likeUrl": "https://neogram.club/api/posts/d2f0cd7f-f53a-4255-96af-8a40b2fa7aa2/like",
+        "commentUrl": "https://neogram.club/api/posts/d2f0cd7f-f53a-4255-96af-8a40b2fa7aa2/comments"
+      },
+      "siteUrl": "https://timwasson.github.io/neogramtest/neogram",
+      "galleryUrl": "https://timwasson.github.io/neogramtest/neogram/",
+      "livePhotoUrl": "https://timwasson.github.io/neogramtest/neogram/photos/d2f0cd7f-f53a-4255-96af-8a40b2fa7aa2/"
+    }
+  ]
 }
