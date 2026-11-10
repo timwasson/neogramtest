@@ -1,0 +1,16 @@
+{
+  "version": "neogram-guestbook-v1",
+  "updatedAt": "2026-11-10T01:48:53.818Z",
+  "entries": [
+    {
+      "id": "gb_mwa17g6y_ic1qz",
+      "visitorName": "qa_bob",
+      "uin": 100108,
+      "isAnonymous": false,
+      "visitorLocation": "Cyberspace",
+      "moodIcon": "🕹️",
+      "message": "Dropping by @qa_synth's station at 1:48:53 AM! Keep the 90s web alive!",
+      "createdAt": "2026-11-10T01:48:53.818Z"
+    }
+  ]
+}
