@@ -1,6 +1,17 @@
 {
   "version": "neogram-comments-v1",
   "postId": "4942cb93-171e-4c38-aaf2-0d2c2f13e021",
-  "updatedAt": "2026-11-10T03:13:24.448Z",
-  "comments": []
+  "updatedAt": "2026-11-10T03:13:34.374Z",
+  "comments": [
+    {
+      "id": "c_mwa48cdi_q6xl7",
+      "userId": "744318a7-846b-466b-b75e-47698aeea657",
+      "author": "qa_arcade",
+      "uin": 100120,
+      "avatar": "https://qa-arcade.nekoweb.org/neogram/avatar.webp?v=1794280392225",
+      "text": "Radical transmission! Those CRT scanlines look authentic. — @qa_arcade",
+      "timestamp": "2026-11-10T03:13:34.374Z",
+      "siteUrl": "https://qa-arcade.nekoweb.org"
+    }
+  ]
 }
