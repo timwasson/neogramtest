@@ -1,6 +1,17 @@
 {
   "version": "neogram-comments-v1",
   "postId": "5b7b9b5b-a322-4b69-b2f7-87795c033339",
-  "updatedAt": "2026-11-10T02:13:20.810Z",
-  "comments": []
+  "updatedAt": "2026-11-10T02:13:24.880Z",
+  "comments": [
+    {
+      "id": "c_mwa22z9s_yxf5t",
+      "userId": "ea3044d5-8e9c-4760-8bd8-8354814b73be",
+      "author": "qa_matrix",
+      "uin": 100121,
+      "avatar": "/uploads/avatars/ea3044d5-8e9c-4760-8bd8-8354814b73be-1794276791677.webp",
+      "text": "Bookmarked your station in my Netscape communicator! — @qa_matrix",
+      "timestamp": "2026-11-10T02:13:24.880Z",
+      "siteUrl": "https://neogram.club"
+    }
+  ]
 }
